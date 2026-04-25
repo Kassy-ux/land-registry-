@@ -1,12 +1,13 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaPg } from '@prisma/adapter-pg'
-import { Pool } from 'pg'
+import { PrismaLibSql } from '@prisma/adapter-libsql'
 import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL })
-const adapter = new PrismaPg(pool)
+const adapter = new PrismaLibSql({
+  url: process.env.DATABASE_URL!
+})
+
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
@@ -21,7 +22,10 @@ async function main() {
       role: 'officer'
     }
   })
-  console.log('Seeded officer@land.ke / officer123')
+  console.log('✓ Seeded officer@land.ke / officer123')
 }
 
-main().catch(console.error).finally(() => prisma.$disconnect())
+main()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect())
+

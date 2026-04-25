@@ -52,8 +52,8 @@ export default function MyParcelsPage() {
       title="My parcels"
       subtitle={`${mine.length} parcel${mine.length === 1 ? '' : 's'} registered to your wallet`}
     >
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm">
-        <div className="px-6 py-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center gap-3">
+      <div className="bg-white rounded-xl sm:rounded-2xl border border-slate-100 shadow-sm">
+        <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center gap-3">
           <div className="relative flex-1">
             <HiOutlineMagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
@@ -61,11 +61,11 @@ export default function MyParcelsPage() {
               placeholder="Search title number or location..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              className="w-full pl-9 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
             />
           </div>
-          <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl">
-            <HiOutlineFunnel className="w-4 h-4 text-slate-400 ml-2" />
+          <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl overflow-x-auto">
+            <HiOutlineFunnel className="w-4 h-4 text-slate-400 ml-2 shrink-0" />
             {(['all', 'pending', 'approved', 'rejected'] as Filter[]).map(f => (
               <button
                 key={f}
@@ -101,13 +101,13 @@ export default function MyParcelsPage() {
         )}
       </div>
 
-      <div className="mt-6 bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-          <HiOutlineDocumentText className="w-5 h-5" />
+      <div className="mt-4 sm:mt-6 bg-white rounded-xl sm:rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-5 flex items-start sm:items-center gap-3 sm:gap-4">
+        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+          <HiOutlineDocumentText className="w-4 h-4 sm:w-5 sm:h-5" />
         </div>
         <div className="flex-1">
-          <p className="font-semibold text-slate-900 text-sm">Click any parcel for details</p>
-          <p className="text-sm text-slate-500">
+          <p className="font-semibold text-slate-900 text-xs sm:text-sm">Click any parcel for details</p>
+          <p className="text-xs sm:text-sm text-slate-500">
             View its on-chain record, attached documents, and full transfer history.
           </p>
         </div>

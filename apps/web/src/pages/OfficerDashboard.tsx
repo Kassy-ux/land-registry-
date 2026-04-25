@@ -75,7 +75,7 @@ export default function OfficerDashboard() {
         </span>
       }
     >
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
         <StatCard label="Total parcels" value={stats.total} Icon={HiOutlineDocumentText} tint="bg-blue-50" text="text-blue-600" />
         <StatCard label="Pending review" value={stats.pending} Icon={HiOutlineClock} tint="bg-amber-50" text="text-amber-600" />
         <StatCard label="Approved" value={stats.approved} Icon={HiOutlineCheckCircle} tint="bg-emerald-50" text="text-emerald-600" />
@@ -108,24 +108,26 @@ export default function OfficerDashboard() {
         ) : (
           <ul className="divide-y divide-slate-100">
             {pending.slice(0, 5).map(p => (
-              <li key={p.id} className="px-6 py-5 flex items-center gap-5 hover:bg-slate-50/60 transition">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white shrink-0">
-                  <HiOutlineClock className="w-6 h-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-bold text-slate-900 truncate font-mono">{p.titleNumber}</p>
-                  <p className="text-sm text-slate-500 truncate flex items-center gap-1">
-                    <HiOutlineMapPin className="w-4 h-4 text-slate-400" />
-                    {p.location}
-                    <span className="mx-1 text-slate-300">·</span>
-                    {p.size} acres
-                  </p>
+              <li key={p.id} className="px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-5 hover:bg-slate-50/60 transition">
+                <div className="flex items-center gap-3 sm:gap-5 flex-1 min-w-0">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white shrink-0">
+                    <HiOutlineClock className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm sm:text-base font-bold text-slate-900 truncate font-mono">{p.titleNumber}</p>
+                    <p className="text-xs sm:text-sm text-slate-500 truncate flex items-center gap-1">
+                      <HiOutlineMapPin className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400" />
+                      {p.location}
+                      <span className="hidden sm:inline mx-1 text-slate-300">·</span>
+                      <span className="hidden sm:inline">{p.size} acres</span>
+                    </p>
+                  </div>
                 </div>
                 <div className="flex gap-2 shrink-0">
                   <button
                     onClick={() => handleAction(p.id, 'approve')}
                     disabled={actioningId === p.id}
-                    className="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-emerald-700 disabled:opacity-50 shadow-md shadow-emerald-200"
+                    className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 sm:gap-1.5 bg-emerald-600 text-white px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-emerald-700 disabled:opacity-50 shadow-md shadow-emerald-200 transition-all"
                   >
                     <HiOutlineCheck className="w-4 h-4" />
                     Approve
@@ -133,7 +135,7 @@ export default function OfficerDashboard() {
                   <button
                     onClick={() => handleAction(p.id, 'reject')}
                     disabled={actioningId === p.id}
-                    className="inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-rose-100 disabled:opacity-50 ring-1 ring-rose-200"
+                    className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 sm:gap-1.5 bg-rose-50 text-rose-700 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-rose-100 disabled:opacity-50 ring-1 ring-rose-200 transition-all"
                   >
                     <HiOutlineXMark className="w-4 h-4" />
                     Reject

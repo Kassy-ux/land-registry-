@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import api from '../services/api'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import {
   HiOutlineArrowLeft,
   HiOutlineMapPin,
@@ -59,7 +59,6 @@ export default function ParcelDetailPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Toaster position="top-right" />
       <nav className="bg-white border-b border-slate-100 px-6 lg:px-10 py-4 flex items-center justify-between">
         <Link to="/">
           <Logo />

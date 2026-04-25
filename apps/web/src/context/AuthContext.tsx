@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { ethers } from 'ethers'
+import toast from 'react-hot-toast'
 import api from '../services/api'
 
 interface AuthContextType {
@@ -31,21 +32,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const connectWallet = async () => {
     if (!window.ethereum) {
-      throw new Error(
-        'MetaMask is not installed. Install it from metamask.io and refresh the page.'
-      )
+      const error = 'MetaMask is not installed. Please install it from metamask.io'
+      toast.error(error)
+      throw new Error(error)
     }
-    const provider = new ethers.BrowserProvider(window.ethereum)
-    const accounts = (await provider.send('eth_requestAccounts', [])) as string[]
-    if (!accounts || accounts.length === 0) {
-      throw new Error('No accounts returned from MetaMask')
+    
+    const toastId = toast.loading('Connecting to MetaMask...')
+    
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum)
+      const accounts = (await provider.send('eth_requestAccounts', [])) as string[]
+      
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts returned from MetaMask')
+      }
+      
+      const signer = await provider.getSigner()
+      const address = await signer.getAddress()
+      
+      toast.loading('Please sign the message...', { id: toastId })
+      
+      const message = `Login to Land Registry: ${address}`
+      const signature = await signer.signMessage(message)
+      
+      toast.loading('Authenticating...', { id: toastId })
+      
+      const res = await api.post('/auth/wallet', { address, message, signature })
+      persistSession(address, res.data.token)
+      
+      toast.success('Wallet connected successfully!', { id: toastId })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to connect wallet'
+      toast.error(message, { id: toastId })
+      throw err
     }
-    const signer = await provider.getSigner()
-    const address = await signer.getAddress()
-    const message = `Login to Land Registry: ${address}`
-    const signature = await signer.signMessage(message)
-    const res = await api.post('/auth/wallet', { address, message, signature })
-    persistSession(address, res.data.token)
   }
 
   const login = (token: string) => {
@@ -55,6 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     persistSession(null, null)
+    toast.success('Logged out successfully')
   }
 
   // React to MetaMask account / chain changes so the app never holds a session
@@ -70,11 +91,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!next || next !== walletAddress.toLowerCase()) {
         // Wallet disconnected or switched to another account -> clear our session.
         persistSession(null, null)
+        toast.info('Wallet disconnected. Please reconnect.')
       }
     }
 
     const onChainChanged = () => {
       // Chain change is a hard reload per MetaMask's docs.
+      toast.info('Network changed. Reloading...')
       window.location.reload()
     }
 

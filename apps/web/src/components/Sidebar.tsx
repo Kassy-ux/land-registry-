@@ -80,7 +80,7 @@ export default function Sidebar({ role, user, onLogout }: Props) {
         </p>
         <nav className="space-y-1">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/help')}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900"
           >
             <HiOutlineQuestionMarkCircle className="w-5 h-5" />

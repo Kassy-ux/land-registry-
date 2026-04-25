@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import api from '../services/api'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
+import { useAuth } from '../context/AuthContext'
 import {
   HiOutlineMagnifyingGlass,
   HiOutlineMapPin,
@@ -47,6 +48,10 @@ interface VerifyResult {
 }
 
 export default function VerifyPage() {
+  const navigate = useNavigate()
+  const { walletAddress, jwtToken } = useAuth()
+  const isLoggedIn = !!(walletAddress || jwtToken)
+  
   const [query, setQuery] = useState('')
   const [result, setResult] = useState<VerifyResult | null>(null)
   const [loading, setLoading] = useState(false)
@@ -59,6 +64,7 @@ export default function VerifyPage() {
       setSearched(true)
       const res = await api.get(`/verify/${encodeURIComponent(query)}`)
       setResult(res.data)
+      toast.success('Parcel verified successfully')
     } catch {
       toast.error('Parcel not found')
       setResult(null)
@@ -92,32 +98,40 @@ export default function VerifyPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-violet-50/30">
-      <Toaster position="top-right" />
 
       <nav className="bg-white/85 backdrop-blur border-b border-slate-100 sticky top-0 z-30">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Link to="/">
             <Logo />
           </Link>
-          <Link
-            to="/login"
-            className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold shadow-md shadow-blue-200"
-          >
-            Sign In
-          </Link>
+          {isLoggedIn ? (
+            <button
+              onClick={() => navigate(walletAddress ? '/landowner' : '/officer')}
+              className="text-sm bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold shadow-md shadow-blue-200 transition-all"
+            >
+              Dashboard
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="text-sm bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold shadow-md shadow-blue-200 transition-all"
+            >
+              Sign In
+            </Link>
+          )}
         </div>
       </nav>
 
-      <main className="max-w-5xl mx-auto px-6 py-12">
-        <div className="text-center max-w-2xl mx-auto mb-10">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
           <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold mb-4">
             <FaEthereum className="w-3.5 h-3.5" />
             Public on-chain lookup
           </span>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 mb-3">
             Verify any land parcel
           </h1>
-          <p className="text-slate-600">
+          <p className="text-sm sm:text-base text-slate-600">
             Enter a title number or parcel ID to view its current owner, status, and full
             transfer history.
           </p>

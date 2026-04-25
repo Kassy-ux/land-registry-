@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import {
   HiOutlineEnvelope,
   HiOutlineLockClosed,
@@ -31,11 +31,9 @@ export default function LoginPage() {
     try {
       setLoading(true)
       await connectWallet()
-      toast.success('Wallet connected')
       navigate('/landowner')
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to connect wallet'
-      toast.error(message)
+      // Error already handled in connectWallet with toast
     } finally {
       setLoading(false)
     }
@@ -47,7 +45,7 @@ export default function LoginPage() {
       setLoading(true)
       const res = await api.post('/auth/login', { email, password })
       login(res.data.token)
-      toast.success('Welcome back')
+      toast.success('Welcome back!')
       navigate('/officer')
     } catch {
       toast.error('Invalid credentials')
@@ -58,7 +56,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
-      <Toaster position="top-right" />
 
       {/* Left visual panel */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col p-10 xl:p-14">

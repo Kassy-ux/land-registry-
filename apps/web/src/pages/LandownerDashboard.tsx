@@ -92,14 +92,15 @@ export default function LandownerDashboard() {
       rightContent={
         <button
           onClick={() => setShowForm(true)}
-          className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-700 shadow-md shadow-blue-200"
+          className="inline-flex items-center gap-1.5 sm:gap-2 bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-blue-700 shadow-md shadow-blue-200 transition-all"
         >
           <HiOutlinePlus className="w-4 h-4" />
-          Register parcel
+          <span className="hidden sm:inline">Register parcel</span>
+          <span className="sm:hidden">Register</span>
         </button>
       }
     >
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
         <StatCard label="Total parcels" value={stats.total} Icon={HiOutlineDocumentText} tint="bg-blue-50" text="text-blue-600" />
         <StatCard label="Approved" value={stats.approved} Icon={HiOutlineCheckCircle} tint="bg-emerald-50" text="text-emerald-600" />
         <StatCard label="Pending" value={stats.pending} Icon={HiOutlineClock} tint="bg-amber-50" text="text-amber-600" />

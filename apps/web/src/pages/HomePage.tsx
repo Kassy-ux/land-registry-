@@ -12,33 +12,45 @@ import {
 } from 'react-icons/hi2'
 import { FaEthereum } from 'react-icons/fa6'
 import Logo from '../components/Logo'
+import { useAuth } from '../context/AuthContext'
 import heroIllustration from '../assets/illustrations/hero-location.svg'
 import analyzeIllustration from '../assets/illustrations/analyze.svg'
 import collaborationIllustration from '../assets/illustrations/collaboration.svg'
 
 export default function HomePage() {
   const navigate = useNavigate()
+  const { walletAddress, jwtToken } = useAuth()
+  const isLoggedIn = !!(walletAddress || jwtToken)
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900">
       {/* Navbar */}
       <nav className="sticky top-0 z-30 bg-white/85 backdrop-blur border-b border-slate-100">
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-6 lg:px-10 py-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-10 py-4">
           <Logo />
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate('/verify')}
-              className="hidden sm:inline-flex items-center gap-1.5 text-sm text-slate-700 px-3 py-2 rounded-lg hover:bg-slate-100 font-medium"
+              className="hidden sm:inline-flex items-center gap-1.5 text-sm text-slate-700 px-3 py-2 rounded-lg hover:bg-slate-100 font-medium transition-colors"
             >
               <HiOutlineDocumentMagnifyingGlass className="w-4 h-4" />
               Verify Land
             </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold shadow-md shadow-blue-200 transition"
-            >
-              Sign In
-            </button>
+            {isLoggedIn ? (
+              <button
+                onClick={() => navigate(walletAddress ? '/landowner' : '/officer')}
+                className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold shadow-md shadow-blue-200 transition-all"
+              >
+                Dashboard
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
+                className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold shadow-md shadow-blue-200 transition-all"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       </nav>
@@ -52,56 +64,66 @@ export default function HomePage() {
               'radial-gradient(circle at 20% 0%, #dbeafe 0%, transparent 40%), radial-gradient(circle at 80% 30%, #ede9fe 0%, transparent 45%)',
           }}
         />
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-16 lg:py-24 grid lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-24 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div>
             <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold mb-5">
               <FaEthereum className="w-3.5 h-3.5" />
               Powered by Ethereum
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight mb-5">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight mb-4 sm:mb-5">
               The future of <span className="text-blue-600">land ownership</span> is
               transparent.
             </h1>
-            <p className="text-lg text-slate-600 leading-relaxed mb-8 max-w-xl">
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed mb-6 sm:mb-8 max-w-xl">
               LandLedger eliminates fraud and bureaucracy with immutable blockchain
               records. Register, transfer, and verify land titles in minutes — not months.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => navigate('/login')}
-                className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-200"
-              >
-                Get Started
-                <HiArrowRight className="w-4 h-4" />
-              </button>
+              {isLoggedIn ? (
+                <button
+                  onClick={() => navigate(walletAddress ? '/landowner' : '/officer')}
+                  className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
+                >
+                  Go to Dashboard
+                  <HiArrowRight className="w-4 h-4" />
+                </button>
+              ) : (
+                <button
+                  onClick={() => navigate('/login')}
+                  className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
+                >
+                  Get Started
+                  <HiArrowRight className="w-4 h-4" />
+                </button>
+              )}
               <button
                 onClick={() => navigate('/verify')}
-                className="inline-flex items-center justify-center gap-2 bg-white text-slate-900 border border-slate-200 px-7 py-3.5 rounded-xl font-semibold hover:bg-slate-50 transition"
+                className="inline-flex items-center justify-center gap-2 bg-white text-slate-900 border border-slate-200 px-7 py-3.5 rounded-xl font-semibold hover:bg-slate-50 transition-all"
               >
                 <HiOutlineDocumentMagnifyingGlass className="w-4 h-4" />
                 Verify a Title
               </button>
             </div>
-            <div className="flex items-center gap-6 mt-10 text-sm text-slate-600">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-8 sm:mt-10 text-xs sm:text-sm text-slate-600">
               <div className="flex items-center gap-2">
-                <HiOutlineCheckCircle className="w-5 h-5 text-emerald-500" />
+                <HiOutlineCheckCircle className="w-4 sm:w-5 h-4 sm:h-5 text-emerald-500" />
                 Tamper-proof records
               </div>
               <div className="flex items-center gap-2">
-                <HiOutlineCheckCircle className="w-5 h-5 text-emerald-500" />
+                <HiOutlineCheckCircle className="w-4 sm:w-5 h-4 sm:h-5 text-emerald-500" />
                 Instant verification
               </div>
             </div>
           </div>
           <div className="relative">
             <div
-              className="absolute -inset-4 rounded-[3rem] -z-10"
+              className="absolute -inset-4 rounded-[2rem] sm:rounded-[3rem] -z-10"
               style={{ background: 'linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%)' }}
             />
             <img
               src={heroIllustration}
               alt="Land verification on the blockchain"
-              className="w-full h-auto max-h-[480px] object-contain"
+              className="w-full h-auto max-h-[320px] sm:max-h-[400px] lg:max-h-[480px] object-contain"
             />
           </div>
         </div>
@@ -109,7 +131,7 @@ export default function HomePage() {
 
       {/* Stats strip */}
       <section className="bg-slate-900 text-white">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {[
             { value: '100%', label: 'Immutable' },
             { value: '< 5s', label: 'Verification' },
@@ -117,27 +139,27 @@ export default function HomePage() {
             { value: '0', label: 'Fraud cases' },
           ].map(s => (
             <div key={s.label} className="text-center md:text-left">
-              <div className="text-3xl md:text-4xl font-extrabold text-blue-400">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-blue-400">
                 {s.value}
               </div>
-              <div className="text-sm text-slate-400 mt-1">{s.label}</div>
+              <div className="text-xs sm:text-sm text-slate-400 mt-1">{s.label}</div>
             </div>
           ))}
         </div>
       </section>
 
       {/* Why */}
-      <section className="px-6 lg:px-10 py-20 bg-slate-50">
+      <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20 bg-slate-50">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider">
+          <div className="text-center mb-8 sm:mb-12">
+            <span className="text-xs sm:text-sm font-semibold text-blue-600 uppercase tracking-wider">
               Why LandLedger
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mt-2">
               Built for trust. Designed for everyone.
             </h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             {[
               {
                 Icon: HiOutlineShieldCheck,
@@ -188,20 +210,20 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="px-6 lg:px-10 py-20 bg-white">
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
+      <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20 bg-white">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-14 items-center">
           <div className="order-2 lg:order-1">
             <img
               src={analyzeIllustration}
               alt="Officer reviewing land records"
-              className="w-full h-auto max-h-[420px] object-contain"
+              className="w-full h-auto max-h-[320px] sm:max-h-[420px] object-contain"
             />
           </div>
           <div className="order-1 lg:order-2">
-            <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider">
+            <span className="text-xs sm:text-sm font-semibold text-blue-600 uppercase tracking-wider">
               How it works
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2 mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mt-2 mb-6 sm:mb-8">
               Three simple steps
             </h2>
             <div className="space-y-6">
@@ -243,17 +265,17 @@ export default function HomePage() {
       </section>
 
       {/* Audiences */}
-      <section className="px-6 lg:px-10 py-20 bg-slate-50">
+      <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20 bg-slate-50">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider">
+          <div className="text-center mb-8 sm:mb-12">
+            <span className="text-xs sm:text-sm font-semibold text-blue-600 uppercase tracking-wider">
               For everyone
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mt-2">
               Whether you own land or verify it
             </h2>
           </div>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-5 sm:gap-6">
             <div className="bg-white rounded-3xl p-8 border border-slate-100 hover:shadow-xl hover:shadow-slate-100 transition">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white">
