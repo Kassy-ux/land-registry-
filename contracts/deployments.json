@@ -1,0 +1,7 @@
+{
+  "sepolia": {
+    "LandRegistry": "0x7F5c027Ff6747d6a127861Df9108F5ee2f392da3",
+    "Ownership": "0x002f17B92Cb30Bc7e324A4F82e226e5b99c55C72",
+    "Verification": "0x1123194a6785E78a5d3Dc2FA8772214172a846D6"
+  }
+}

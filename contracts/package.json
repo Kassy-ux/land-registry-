@@ -1,0 +1,18 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:sepolia": "hardhat run scripts/deploy.ts --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^4.0.9",
+    "@nomicfoundation/hardhat-toolbox": "^6.1.2",
+    "dotenv": "^17.4.2",
+    "ethers": "^6.16.0",
+    "hardhat": "2.22.17",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}
