@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node dist/index.js",
+    "postinstall": "prisma generate",
     "seed": "ts-node --transpile-only prisma/seed.ts",
     "add-user": "ts-node --transpile-only scripts/add-user.ts",
     "check-users": "ts-node --transpile-only scripts/check-users.ts"
