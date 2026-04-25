@@ -7,9 +7,11 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-app.use((0, helmet_1.default)());
+app.use((0, helmet_1.default)({ contentSecurityPolicy: false }));
 app.use((0, cors_1.default)({ origin: process.env.FRONTEND_URL || '*' }));
 app.use(express_1.default.json());
 const auth_1 = __importDefault(require("./routes/auth"));
@@ -23,5 +25,13 @@ app.use('/api/transfers', transfers_1.default);
 app.use('/api/documents', documents_1.default);
 app.use('/api/verify', verify_1.default);
 app.get('/health', (_, res) => res.json({ status: 'ok' }));
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`API running on port ${PORT}`));
+const webDistPath = path_1.default.resolve(__dirname, '../../web/dist');
+if (fs_1.default.existsSync(webDistPath)) {
+    app.use(express_1.default.static(webDistPath));
+    app.get(/^\/(?!api\/|health$).*/, (_req, res) => {
+        res.sendFile(path_1.default.join(webDistPath, 'index.html'));
+    });
+}
+const PORT = Number(process.env.PORT) || 3001;
+const HOST = process.env.HOST || '127.0.0.1';
+app.listen(PORT, HOST, () => console.log(`API running on ${HOST}:${PORT}`));

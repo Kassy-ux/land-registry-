@@ -25,11 +25,7 @@ async function getParcel(req, res) {
     try {
         const parcel = await prismaService_1.default.landParcel.findUnique({
             where: { id: Number(req.params.id) },
-            include: {
-                ownerships: { include: { user: true } },
-                documents: true,
-                blockchainRecords: true
-            }
+            include: { ownerships: { include: { user: true } }, documents: true, blockchainRecords: true }
         });
         if (!parcel) {
             res.status(404).json({ error: 'Not found' });
@@ -45,21 +41,20 @@ async function submitParcel(req, res) {
     try {
         const { titleNumber, location, size, ipfsHash, ownerAddress } = req.body;
         const parcel = await prismaService_1.default.landParcel.create({
-            data: { titleNumber, location, size: Number(size) }
+            data: { titleNumber, location, size: Number(size), status: 'pending' }
         });
         await prismaService_1.default.ownership.create({
             data: { userId: req.userId, landId: parcel.id }
         });
-        const tx = await blockchainService_1.landRegistryContract.submitParcel(titleNumber, location, ipfsHash || '');
-        const receipt = await tx.wait();
-        await prismaService_1.default.blockchainRecord.create({
-            data: {
-                landId: parcel.id,
-                blockHash: receipt.blockHash,
-            }
-        });
-        if (ownerAddress) {
-            await blockchainService_1.ownershipContract.setInitialOwner(parcel.id, ownerAddress);
+        try {
+            const tx = await blockchainService_1.landRegistryContract.submitParcel(titleNumber, location, ipfsHash || '');
+            const receipt = await tx.wait();
+            await prismaService_1.default.blockchainRecord.create({
+                data: { landId: parcel.id, blockHash: receipt.blockHash }
+            });
+        }
+        catch (blockchainErr) {
+            console.error('Blockchain submit failed:', blockchainErr);
         }
         res.status(201).json(parcel);
     }
@@ -70,9 +65,27 @@ async function submitParcel(req, res) {
 async function approveParcel(req, res) {
     try {
         const parcelId = Number(req.params.id);
-        const tx = await blockchainService_1.landRegistryContract.approveParcel(parcelId);
-        await tx.wait();
-        res.json({ success: true, message: 'Parcel approved on-chain' });
+        const parcel = await prismaService_1.default.landParcel.findUnique({ where: { id: parcelId } });
+        if (!parcel) {
+            res.status(404).json({ error: 'Not found' });
+            return;
+        }
+        if (parcel.status !== 'pending') {
+            res.status(400).json({ error: 'Parcel is not pending' });
+            return;
+        }
+        await prismaService_1.default.landParcel.update({
+            where: { id: parcelId },
+            data: { status: 'approved' }
+        });
+        try {
+            const tx = await blockchainService_1.landRegistryContract.approveParcel(parcelId);
+            await tx.wait();
+        }
+        catch (blockchainErr) {
+            console.error('Blockchain approve failed:', blockchainErr);
+        }
+        res.json({ success: true, message: 'Parcel approved' });
     }
     catch (err) {
         res.status(500).json({ error: err.message });
@@ -81,9 +94,27 @@ async function approveParcel(req, res) {
 async function rejectParcel(req, res) {
     try {
         const parcelId = Number(req.params.id);
-        const tx = await blockchainService_1.landRegistryContract.rejectParcel(parcelId);
-        await tx.wait();
-        res.json({ success: true, message: 'Parcel rejected on-chain' });
+        const parcel = await prismaService_1.default.landParcel.findUnique({ where: { id: parcelId } });
+        if (!parcel) {
+            res.status(404).json({ error: 'Not found' });
+            return;
+        }
+        if (parcel.status !== 'pending') {
+            res.status(400).json({ error: 'Parcel is not pending' });
+            return;
+        }
+        await prismaService_1.default.landParcel.update({
+            where: { id: parcelId },
+            data: { status: 'rejected' }
+        });
+        try {
+            const tx = await blockchainService_1.landRegistryContract.rejectParcel(parcelId);
+            await tx.wait();
+        }
+        catch (blockchainErr) {
+            console.error('Blockchain reject failed:', blockchainErr);
+        }
+        res.json({ success: true, message: 'Parcel rejected' });
     }
     catch (err) {
         res.status(500).json({ error: err.message });
