@@ -1,102 +1,412 @@
 import { useNavigate } from 'react-router-dom'
+import {
+  HiArrowRight,
+  HiOutlineShieldCheck,
+  HiOutlineLockClosed,
+  HiOutlineEye,
+  HiOutlineBoltSlash,
+  HiOutlineBolt,
+  HiOutlineDocumentMagnifyingGlass,
+  HiOutlineCheckCircle,
+  HiOutlineClipboardDocumentList,
+} from 'react-icons/hi2'
+import { FaEthereum } from 'react-icons/fa6'
+import Logo from '../components/Logo'
+import heroIllustration from '../assets/illustrations/hero-location.svg'
+import analyzeIllustration from '../assets/illustrations/analyze.svg'
+import collaborationIllustration from '../assets/illustrations/collaboration.svg'
 
 export default function HomePage() {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-white font-sans">
-
+    <div className="min-h-screen bg-white font-sans text-slate-900">
       {/* Navbar */}
-      <nav className="flex justify-between items-center px-8 py-4 border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          <div className="bg-blue-600 rounded-lg p-1.5">
-            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-            </svg>
+      <nav className="sticky top-0 z-30 bg-white/85 backdrop-blur border-b border-slate-100">
+        <div className="max-w-7xl mx-auto flex justify-between items-center px-6 lg:px-10 py-4">
+          <Logo />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate('/verify')}
+              className="hidden sm:inline-flex items-center gap-1.5 text-sm text-slate-700 px-3 py-2 rounded-lg hover:bg-slate-100 font-medium"
+            >
+              <HiOutlineDocumentMagnifyingGlass className="w-4 h-4" />
+              Verify Land
+            </button>
+            <button
+              onClick={() => navigate('/login')}
+              className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold shadow-md shadow-blue-200 transition"
+            >
+              Sign In
+            </button>
           </div>
-          <span className="font-bold text-gray-900">Land Registry</span>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={() => navigate('/verify')} className="text-sm text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-100 font-medium">Verify Land</button>
-          <button onClick={() => navigate('/login')} className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">Sign In</button>
         </div>
       </nav>
 
       {/* Hero */}
-      <div className="flex flex-col items-center text-center px-6 py-16">
-        <div className="bg-blue-600 rounded-2xl p-4 mb-6 shadow-lg shadow-blue-100">
-          <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-          </svg>
+      <section className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            background:
+              'radial-gradient(circle at 20% 0%, #dbeafe 0%, transparent 40%), radial-gradient(circle at 80% 30%, #ede9fe 0%, transparent 45%)',
+          }}
+        />
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-16 lg:py-24 grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold mb-5">
+              <FaEthereum className="w-3.5 h-3.5" />
+              Powered by Ethereum
+            </span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight mb-5">
+              The future of <span className="text-blue-600">land ownership</span> is
+              transparent.
+            </h1>
+            <p className="text-lg text-slate-600 leading-relaxed mb-8 max-w-xl">
+              LandLedger eliminates fraud and bureaucracy with immutable blockchain
+              records. Register, transfer, and verify land titles in minutes — not months.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={() => navigate('/login')}
+                className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-200"
+              >
+                Get Started
+                <HiArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => navigate('/verify')}
+                className="inline-flex items-center justify-center gap-2 bg-white text-slate-900 border border-slate-200 px-7 py-3.5 rounded-xl font-semibold hover:bg-slate-50 transition"
+              >
+                <HiOutlineDocumentMagnifyingGlass className="w-4 h-4" />
+                Verify a Title
+              </button>
+            </div>
+            <div className="flex items-center gap-6 mt-10 text-sm text-slate-600">
+              <div className="flex items-center gap-2">
+                <HiOutlineCheckCircle className="w-5 h-5 text-emerald-500" />
+                Tamper-proof records
+              </div>
+              <div className="flex items-center gap-2">
+                <HiOutlineCheckCircle className="w-5 h-5 text-emerald-500" />
+                Instant verification
+              </div>
+            </div>
+          </div>
+          <div className="relative">
+            <div
+              className="absolute -inset-4 rounded-[3rem] -z-10"
+              style={{ background: 'linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%)' }}
+            />
+            <img
+              src={heroIllustration}
+              alt="Land verification on the blockchain"
+              className="w-full h-auto max-h-[480px] object-contain"
+            />
+          </div>
         </div>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 max-w-2xl leading-tight">Blockchain Land Registry</h1>
-        <p className="text-base text-gray-500 max-w-xl mb-8 leading-relaxed">
-          Secure, transparent, and trustworthy land registration powered by blockchain. Eliminating fraud, ensuring data integrity, and automating ownership transfers for Kenya.
-        </p>
-        <button onClick={() => navigate('/login')} className="bg-blue-600 text-white px-8 py-3 rounded-xl text-sm font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-100">
-          Get Started →
-        </button>
-      </div>
+      </section>
+
+      {/* Stats strip */}
+      <section className="bg-slate-900 text-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            { value: '100%', label: 'Immutable' },
+            { value: '< 5s', label: 'Verification' },
+            { value: '24/7', label: 'Available' },
+            { value: '0', label: 'Fraud cases' },
+          ].map(s => (
+            <div key={s.label} className="text-center md:text-left">
+              <div className="text-3xl md:text-4xl font-extrabold text-blue-400">
+                {s.value}
+              </div>
+              <div className="text-sm text-slate-400 mt-1">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Why */}
-      <div className="bg-gray-50 px-6 py-14">
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">Why Blockchain Land Registry?</h2>
-        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {[
-            { bg: 'bg-blue-50', iconBg: 'bg-blue-100', color: 'text-blue-600', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', title: 'Fraud Prevention', desc: 'Eliminate double titling and unauthorized changes with immutable blockchain records.' },
-            { bg: 'bg-green-50', iconBg: 'bg-green-100', color: 'text-green-600', icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z', title: 'Data Integrity', desc: 'Tamper-proof records ensure your land information is always accurate and secure.' },
-            { bg: 'bg-purple-50', iconBg: 'bg-purple-100', color: 'text-purple-600', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4', title: 'Transparency', desc: 'Complete visibility of land records and transaction history builds public trust.' },
-            { bg: 'bg-orange-50', iconBg: 'bg-orange-100', color: 'text-orange-600', icon: 'M13 10V3L4 14h7v7l9-11h-7z', title: 'Smart Automation', desc: 'Automated ownership transfers reduce bureaucracy and minimize human error.' },
-          ].map(f => (
-            <div key={f.title} className={`${f.bg} rounded-2xl p-6`}>
-              <div className={`${f.iconBg} w-11 h-11 rounded-xl flex items-center justify-center mb-4`}>
-                <svg className={`w-6 h-6 ${f.color}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d={f.icon} />
-                </svg>
+      <section className="px-6 lg:px-10 py-20 bg-slate-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider">
+              Why LandLedger
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2">
+              Built for trust. Designed for everyone.
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              {
+                Icon: HiOutlineShieldCheck,
+                title: 'Fraud Prevention',
+                desc: 'Eliminate double titling with immutable on-chain records.',
+                color: 'bg-blue-500',
+                tint: 'bg-blue-50',
+                text: 'text-blue-600',
+              },
+              {
+                Icon: HiOutlineLockClosed,
+                title: 'Data Integrity',
+                desc: 'Cryptographically secured records that nobody can alter.',
+                color: 'bg-emerald-500',
+                tint: 'bg-emerald-50',
+                text: 'text-emerald-600',
+              },
+              {
+                Icon: HiOutlineEye,
+                title: 'Full Transparency',
+                desc: 'Every transfer is publicly auditable and traceable.',
+                color: 'bg-violet-500',
+                tint: 'bg-violet-50',
+                text: 'text-violet-600',
+              },
+              {
+                Icon: HiOutlineBolt,
+                title: 'Smart Automation',
+                desc: 'Smart contracts execute transfers in seconds, not weeks.',
+                color: 'bg-amber-500',
+                tint: 'bg-amber-50',
+                text: 'text-amber-600',
+              },
+            ].map(f => (
+              <div
+                key={f.title}
+                className="bg-white rounded-2xl p-6 border border-slate-100 hover:border-slate-200 hover:shadow-lg hover:shadow-slate-100 transition"
+              >
+                <div className={`${f.tint} w-12 h-12 rounded-xl flex items-center justify-center mb-4`}>
+                  <f.Icon className={`w-6 h-6 ${f.text}`} />
+                </div>
+                <h3 className="font-bold text-slate-900 mb-1.5">{f.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{f.desc}</p>
               </div>
-              <h3 className="font-bold text-gray-900 mb-1">{f.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* How it works */}
-      <div className="px-6 py-14 bg-white">
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-10">How It Works</h2>
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { num: 1, title: 'Register Your Land', desc: 'Land owners submit registration applications with title deed details and documentation.' },
-            { num: 2, title: 'Officer Verification', desc: 'Registry officers review and verify the authenticity of land records before approval.' },
-            { num: 3, title: 'Blockchain Recorded', desc: 'Approved records are permanently stored on the blockchain, creating an immutable audit trail.' },
-          ].map(s => (
-            <div key={s.num} className="flex flex-col items-center text-center">
-              <div className="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mb-4 shadow-md shadow-blue-100">{s.num}</div>
-              <h3 className="font-bold text-gray-900 mb-2">{s.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
+      <section className="px-6 lg:px-10 py-20 bg-white">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
+          <div className="order-2 lg:order-1">
+            <img
+              src={analyzeIllustration}
+              alt="Officer reviewing land records"
+              className="w-full h-auto max-h-[420px] object-contain"
+            />
+          </div>
+          <div className="order-1 lg:order-2">
+            <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider">
+              How it works
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2 mb-8">
+              Three simple steps
+            </h2>
+            <div className="space-y-6">
+              {[
+                {
+                  Icon: HiOutlineClipboardDocumentList,
+                  title: 'Submit your registration',
+                  desc: 'Connect your wallet and submit your title deed details.',
+                },
+                {
+                  Icon: HiOutlineDocumentMagnifyingGlass,
+                  title: 'Officer verification',
+                  desc: 'A registered officer reviews and approves the application.',
+                },
+                {
+                  Icon: HiOutlineShieldCheck,
+                  title: 'On-chain forever',
+                  desc: 'Approved records are written to the blockchain immutably.',
+                },
+              ].map((s, i) => (
+                <div key={s.title} className="flex gap-4">
+                  <div className="shrink-0 relative">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200">
+                      <s.Icon className="w-6 h-6" />
+                    </div>
+                    <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-white text-blue-600 border border-blue-200 text-[10px] font-bold flex items-center justify-center">
+                      {i + 1}
+                    </span>
+                  </div>
+                  <div className="pt-1">
+                    <h3 className="font-bold text-slate-900 mb-1">{s.title}</h3>
+                    <p className="text-slate-500 text-sm leading-relaxed">{s.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Audiences */}
+      <section className="px-6 lg:px-10 py-20 bg-slate-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider">
+              For everyone
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2">
+              Whether you own land or verify it
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-3xl p-8 border border-slate-100 hover:shadow-xl hover:shadow-slate-100 transition">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white">
+                  <HiOutlineShieldCheck className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900">Landowners</h3>
+              </div>
+              <p className="text-slate-600 mb-6">
+                Connect your crypto wallet, register your title, and prove ownership
+                instantly — anywhere in the world.
+              </p>
+              <ul className="space-y-2.5 text-sm mb-6">
+                {[
+                  'Connect with MetaMask',
+                  'Register parcels in minutes',
+                  'Track approval in real time',
+                ].map(t => (
+                  <li key={t} className="flex items-center gap-2 text-slate-700">
+                    <HiOutlineCheckCircle className="w-4 h-4 text-blue-600" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => navigate('/login')}
+                className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all"
+              >
+                Connect wallet
+                <HiArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="bg-white rounded-3xl p-8 border border-slate-100 hover:shadow-xl hover:shadow-slate-100 transition">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white">
+                  <HiOutlineClipboardDocumentList className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900">Registry Officers</h3>
+              </div>
+              <p className="text-slate-600 mb-6">
+                Review applications, approve transfers, and maintain the integrity of the
+                national registry — all from one dashboard.
+              </p>
+              <ul className="space-y-2.5 text-sm mb-6">
+                {[
+                  'Sign in with credentials',
+                  'Review pending submissions',
+                  'Approve or reject parcels',
+                ].map(t => (
+                  <li key={t} className="flex items-center gap-2 text-slate-700">
+                    <HiOutlineCheckCircle className="w-4 h-4 text-emerald-600" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => navigate('/login')}
+                className="inline-flex items-center gap-2 text-emerald-600 font-semibold hover:gap-3 transition-all"
+              >
+                Officer login
+                <HiArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Public verification CTA */}
+      <section className="px-6 lg:px-10 py-20 bg-white">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider">
+              Public lookup
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2 mb-5">
+              Verify any land title — no account needed.
+            </h2>
+            <p className="text-slate-600 mb-8 text-lg">
+              Anyone can check the on-chain status, owner history, and authenticity of a
+              land parcel using just its title number.
+            </p>
+            <button
+              onClick={() => navigate('/verify')}
+              className="inline-flex items-center gap-2 bg-slate-900 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-slate-800 transition shadow-lg shadow-slate-200"
+            >
+              <HiOutlineDocumentMagnifyingGlass className="w-5 h-5" />
+              Open public verifier
+            </button>
+          </div>
+          <div>
+            <img
+              src={collaborationIllustration}
+              alt="Collaboration on the registry"
+              className="w-full h-auto max-h-[400px] object-contain"
+            />
+          </div>
+        </div>
+      </section>
 
       {/* CTA */}
-      <div className="mx-6 mb-10 rounded-3xl px-8 py-14 text-center" style={{background: 'linear-gradient(135deg, #1d4ed8 0%, #4f46e5 100%)'}}>
-        <h2 className="text-2xl font-bold text-white mb-3">Ready to Secure Your Land Records?</h2>
-        <p className="text-blue-100 mb-8 text-sm">Join the future of land administration with our blockchain-enabled registry system.</p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <button onClick={() => navigate('/login')} className="bg-white text-blue-700 px-7 py-3 rounded-xl text-sm font-semibold hover:bg-blue-50 transition shadow">
-            Access the Platform →
-          </button>
-          <button onClick={() => navigate('/verify')} className="border-2 border-white text-white px-7 py-3 rounded-xl text-sm font-semibold hover:bg-white hover:text-blue-700 transition">
-            Verify Land Ownership →
-          </button>
+      <section className="px-6 lg:px-10 pb-16">
+        <div
+          className="max-w-7xl mx-auto rounded-3xl px-8 lg:px-14 py-14 lg:py-20 text-center relative overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #4f46e5 50%, #7c3aed 100%)' }}
+        >
+          <div
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+              backgroundSize: '24px 24px',
+            }}
+          />
+          <div className="relative">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">
+              Ready to secure your land records?
+            </h2>
+            <p className="text-blue-100 mb-8 max-w-xl mx-auto">
+              Join the future of land administration with our blockchain-enabled registry
+              system.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => navigate('/login')}
+                className="inline-flex items-center justify-center gap-2 bg-white text-blue-700 px-7 py-3.5 rounded-xl font-semibold hover:bg-blue-50 transition shadow-lg"
+              >
+                Access the platform
+                <HiArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => navigate('/verify')}
+                className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur border-2 border-white/40 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-white/20 transition"
+              >
+                Verify ownership
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Footer */}
-      <div className="text-center py-6 text-gray-400 text-xs border-t border-gray-100">
-        © 2026 Blockchain Land Registry. Enhancing transparency, security, and trust in land administration.
-      </div>
+      <footer className="border-t border-slate-100 bg-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <Logo size="sm" />
+          <p className="text-xs text-slate-400 text-center">
+            © 2026 LandLedger. Enhancing transparency, security, and trust in land
+            administration.
+          </p>
+          <div className="flex items-center gap-2 text-xs text-slate-500">
+            <HiOutlineBoltSlash className="w-4 h-4 text-amber-500" />
+            Sepolia Testnet
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

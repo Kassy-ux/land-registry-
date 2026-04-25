@@ -61,3 +61,16 @@ Deployment target is **autoscale**. The build step installs dependencies, runs P
 - `apps/api/src/index.ts` serves `apps/web/dist` (when present) and binds to a configurable host/port for prod.
 - `apps/web/vite.config.ts` enables `allowedHosts: true` and a `/api` proxy so the iframe-proxied dev preview works without CORS.
 - A `Window.ethereum` ambient declaration was added at `apps/web/src/types/window.d.ts` so the TypeScript build succeeds with MetaMask integration code.
+
+## UI / Design System
+
+Brand: **LandLedger** (icon-driven blue/indigo palette).
+
+- Iconography: `react-icons` (Heroicons v2 outline via `react-icons/hi2`, `FaEthereum` & `FaWallet` from `react-icons/fa6`). No emojis anywhere.
+- Illustrations: undraw.co SVGs in `apps/web/src/assets/illustrations/` (hero-location, secure-login, verified, empty-data, empty-tasks, analyze, route-planning, collaboration, success, thinking).
+- Shared layout components in `apps/web/src/components/`:
+  - `Logo.tsx` — gradient shield + word-mark, `sm`/`md`/`lg` sizes.
+  - `Sidebar.tsx` — role-based navigation (`landowner` / `officer`), uses `NavLink` for active state.
+  - `TopBar.tsx` — page title + search + notifications slot for dashboards.
+- Pages redesigned with the AlphaWave-inspired sidebar+topbar shell:
+  - `HomePage.tsx`, `LoginPage.tsx`, `VerifyPage.tsx`, `LandownerDashboard.tsx`, `OfficerDashboard.tsx`.
