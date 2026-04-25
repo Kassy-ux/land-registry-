@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { ethers } from 'ethers'
 import api from '../services/api'
 
@@ -20,19 +20,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.getItem('jwt_token')
   )
 
+  const persistSession = (address: string | null, token: string | null) => {
+    setWalletAddress(address)
+    setJwtToken(token)
+    if (address) localStorage.setItem('wallet_address', address)
+    else localStorage.removeItem('wallet_address')
+    if (token) localStorage.setItem('jwt_token', token)
+    else localStorage.removeItem('jwt_token')
+  }
+
   const connectWallet = async () => {
-    if (!window.ethereum) throw new Error('MetaMask not found')
+    if (!window.ethereum) {
+      throw new Error(
+        'MetaMask is not installed. Install it from metamask.io and refresh the page.'
+      )
+    }
     const provider = new ethers.BrowserProvider(window.ethereum)
-    await provider.send('eth_requestAccounts', [])
+    const accounts = (await provider.send('eth_requestAccounts', [])) as string[]
+    if (!accounts || accounts.length === 0) {
+      throw new Error('No accounts returned from MetaMask')
+    }
     const signer = await provider.getSigner()
     const address = await signer.getAddress()
     const message = `Login to Land Registry: ${address}`
     const signature = await signer.signMessage(message)
     const res = await api.post('/auth/wallet', { address, message, signature })
-    setWalletAddress(address)
-    setJwtToken(res.data.token)
-    localStorage.setItem('wallet_address', address)
-    localStorage.setItem('jwt_token', res.data.token)
+    persistSession(address, res.data.token)
   }
 
   const login = (token: string) => {
@@ -41,11 +54,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const logout = () => {
-    setWalletAddress(null)
-    setJwtToken(null)
-    localStorage.removeItem('jwt_token')
-    localStorage.removeItem('wallet_address')
+    persistSession(null, null)
   }
+
+  // React to MetaMask account / chain changes so the app never holds a session
+  // for an account the user has switched away from.
+  useEffect(() => {
+    const eth = window.ethereum
+    if (!eth || typeof eth.on !== 'function') return
+
+    const onAccountsChanged = (...args: unknown[]) => {
+      if (!walletAddress) return
+      const accounts = (args[0] as string[] | undefined) ?? []
+      const next = accounts[0]?.toLowerCase()
+      if (!next || next !== walletAddress.toLowerCase()) {
+        // Wallet disconnected or switched to another account -> clear our session.
+        persistSession(null, null)
+      }
+    }
+
+    const onChainChanged = () => {
+      // Chain change is a hard reload per MetaMask's docs.
+      window.location.reload()
+    }
+
+    eth.on('accountsChanged', onAccountsChanged)
+    eth.on('chainChanged', onChainChanged)
+    return () => {
+      eth.removeListener?.('accountsChanged', onAccountsChanged)
+      eth.removeListener?.('chainChanged', onChainChanged)
+    }
+  }, [walletAddress])
 
   return (
     <AuthContext.Provider value={{ walletAddress, jwtToken, connectWallet, login, logout }}>

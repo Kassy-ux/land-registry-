@@ -30,8 +30,18 @@ export async function login(req: Request, res: Response) {
 export async function walletLogin(req: Request, res: Response) {
   try {
     const { address, message, signature } = req.body
+    if (!address || !message || !signature) {
+      res.status(400).json({ error: 'address, message and signature are required' })
+      return
+    }
     const { ethers } = await import('ethers')
-    const recovered = ethers.verifyMessage(message, signature)
+    let recovered: string
+    try {
+      recovered = ethers.verifyMessage(message, signature)
+    } catch {
+      res.status(401).json({ error: 'Invalid signature' })
+      return
+    }
     if (recovered.toLowerCase() !== address.toLowerCase()) {
       res.status(401).json({ error: 'Invalid signature' })
       return
