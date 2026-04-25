@@ -72,5 +72,12 @@ Brand: **LandLedger** (icon-driven blue/indigo palette).
   - `Logo.tsx` — gradient shield + word-mark, `sm`/`md`/`lg` sizes.
   - `Sidebar.tsx` — role-based navigation (`landowner` / `officer`), uses `NavLink` for active state.
   - `TopBar.tsx` — page title + search + notifications slot for dashboards.
-- Pages redesigned with the AlphaWave-inspired sidebar+topbar shell:
-  - `HomePage.tsx`, `LoginPage.tsx`, `VerifyPage.tsx`, `LandownerDashboard.tsx`, `OfficerDashboard.tsx`.
+- Pages, all wired in `apps/web/src/App.tsx`:
+  - Public: `HomePage`, `LoginPage`, `VerifyPage`, `ParcelDetailPage` (`/parcels/:id`), `NotFoundPage` (catch-all).
+  - Landowner (wallet-protected): `LandownerDashboard` (`/landowner`), `MyParcelsPage` (`/landowner/parcels`).
+  - Officer (JWT-protected): `OfficerDashboard` (`/officer`), `PendingReviewsPage` (`/officer/pending`), `HistoryPage` (`/officer/history`).
+- Reusable building blocks under `apps/web/src/components/`:
+  - `DashboardLayout` (Sidebar + TopBar + main + Toaster shell).
+  - `StatusBadge`, `StatCard`, `ParcelRow`, `EmptyState` (used across all dashboard pages).
+  - `ProtectedRoute` redirects unauthenticated users to `/login`.
+- Shared types in `apps/web/src/types/parcel.ts` mirror the Prisma schema response shape.
