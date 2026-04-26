@@ -91,13 +91,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!next || next !== walletAddress.toLowerCase()) {
         // Wallet disconnected or switched to another account -> clear our session.
         persistSession(null, null)
-        toast.info('Wallet disconnected. Please reconnect.')
+        toast('Wallet disconnected. Please reconnect.')
       }
     }
 
     const onChainChanged = () => {
       // Chain change is a hard reload per MetaMask's docs.
-      toast.info('Network changed. Reloading...')
+      toast('Network changed. Reloading...')
       window.location.reload()
     }
 
