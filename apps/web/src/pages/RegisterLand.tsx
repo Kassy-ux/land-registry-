@@ -1,7 +1,8 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
+import { FileText, MapPin, Ruler, Calendar, User as UserIcon, Loader2, Send } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
-import toast, { Toaster } from 'react-hot-toast'
 
 export default function RegisterLand() {
   const { walletAddress, jwtToken, user } = useAuth()
@@ -36,8 +37,7 @@ export default function RegisterLand() {
   }
 
   return (
-    <main className="flex-1 p-6 max-w-2xl">
-      <Toaster />
+    <div className="p-6 max-w-2xl">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900">Register New Land</h2>
         <p className="text-gray-500 text-sm mt-1">Add a new land parcel to the blockchain registry</p>
@@ -45,70 +45,96 @@ export default function RegisterLand() {
 
       <div className="bg-white border border-gray-200 rounded-2xl p-6">
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Title Deed Number <span className="text-red-500">*</span></label>
+          <Field
+            icon={FileText}
+            label="Title Deed Number"
+            required
+            hint="Unique identifier for the land parcel"
+          >
             <input
               placeholder="e.g., LR/2024/003"
               value={form.titleNumber}
-              onChange={e => setForm({...form, titleNumber: e.target.value})}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              onChange={e => setForm({ ...form, titleNumber: e.target.value })}
+              className="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
-            <p className="text-xs text-gray-400 mt-1">Unique identifier for the land parcel</p>
-          </div>
+          </Field>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Land Owner Name <span className="text-red-500">*</span></label>
+          <Field icon={UserIcon} label="Land Owner Name" required hint="Registering as yourself">
             <input
-              value={user?.name || (walletAddress ? `${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}` : 'Connect wallet')}
+              value={user?.name || (walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : 'Connect wallet')}
               readOnly
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-gray-50 text-gray-500"
+              className="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm bg-gray-50 text-gray-500"
             />
-            <p className="text-xs text-gray-400 mt-1">Registering as yourself</p>
-          </div>
+          </Field>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Location <span className="text-red-500">*</span></label>
+          <Field icon={MapPin} label="Location" required>
             <input
               placeholder="e.g., Nairobi, Karen"
               value={form.location}
-              onChange={e => setForm({...form, location: e.target.value})}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              onChange={e => setForm({ ...form, location: e.target.value })}
+              className="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
-          </div>
+          </Field>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Land Size <span className="text-red-500">*</span></label>
+          <Field icon={Ruler} label="Land Size (acres)" required>
             <input
-              placeholder="e.g., 3.5 acres"
+              placeholder="e.g., 3.5"
               type="number"
               step="0.1"
               value={form.size}
-              onChange={e => setForm({...form, size: e.target.value})}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              onChange={e => setForm({ ...form, size: e.target.value })}
+              className="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
-          </div>
+          </Field>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Registration Date <span className="text-red-500">*</span></label>
+          <Field icon={Calendar} label="Registration Date" required>
             <input
               value={form.registrationDate}
               readOnly
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-gray-50 text-gray-500"
+              className="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm bg-gray-50 text-gray-500"
             />
-          </div>
+          </Field>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition disabled:opacity-50"
+            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition disabled:opacity-50 flex items-center justify-center gap-2"
           >
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             {loading ? 'Submitting to blockchain...' : 'Register Land Parcel'}
           </button>
         </form>
       </div>
-    </main>
+    </div>
+  )
+}
+
+function Field({
+  icon: Icon,
+  label,
+  required,
+  hint,
+  children,
+}: {
+  icon: any
+  label: string
+  required?: boolean
+  hint?: string
+  children: React.ReactNode
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1.5">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      <div className="relative">
+        <Icon className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+        {children}
+      </div>
+      {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
+    </div>
   )
 }

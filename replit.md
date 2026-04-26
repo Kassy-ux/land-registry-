@@ -13,7 +13,22 @@ Blockchain-powered land administration system. Monorepo using **pnpm workspaces*
 ### Database
 Uses Replit's built-in PostgreSQL. The `DATABASE_URL` env var is provided by the platform. Migrations live under `apps/api/prisma/migrations` and are applied with `prisma migrate deploy`.
 
-Default seeded admin: `admin@land.ke` / `admin123`.
+Demo accounts (seeded by `apps/api/prisma/seedAdmin.ts`):
+- Admin — `admin@land.ke` / `admin123`
+- Officer — `officer@land.ke` / `officer123`
+- Landowner — `landowner@land.ke` / `landowner123`
+- Buyer — `buyer@land.ke` / `buyer123`
+
+Five sample parcels (`LR/2024/001`–`005`) with mixed approval states are seeded for demos.
+
+## UI Stack
+- Icons: **lucide-react** (no emojis anywhere)
+- Toasts: **sonner** (via `<Toaster richColors />` in `App.tsx`)
+- Charts: **recharts** (Pie + Bar on Admin Overview)
+- Layout: collapsible `Sidebar` + mobile drawer + `TopNav` user menu, wrapped by `DashboardLayout`
+- Illustrations: undraw-style SVGs from popsy.co in `apps/web/public/illustrations/`
+
+Note: `tsconfig.app.json` has `verbatimModuleSyntax: true`, so type-only imports must use `import type` (e.g. `import { type SidebarItem }`).
 
 ### Workflows
 - **Start application** — `pnpm --filter web dev` on port 5000 (Vite, host `0.0.0.0`, `allowedHosts: true`). Proxies `/api/*` to the backend.
