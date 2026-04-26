@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
+import { Hand, Loader2 } from 'lucide-react'
 
 export default function WalletNameModal() {
   const { needsName, completeWalletSetup, walletAddress } = useAuth()
@@ -30,7 +31,7 @@ export default function WalletNameModal() {
       <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-xl">
         <div className="text-center mb-6">
           <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-            <span className="text-2xl">👋</span>
+            <Hand className="w-6 h-6 text-indigo-600" />
           </div>
           <h2 className="text-xl font-semibold text-gray-900">Welcome!</h2>
           <p className="text-gray-500 text-sm mt-1">First time here. What's your name?</p>
@@ -48,8 +49,9 @@ export default function WalletNameModal() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 disabled:opacity-50"
+            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 disabled:opacity-50 flex items-center justify-center gap-2"
           >
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             {loading ? 'Setting up...' : 'Get Started'}
           </button>
         </form>

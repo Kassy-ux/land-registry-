@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
+import { ArrowRightLeft, Loader2, Inbox } from 'lucide-react'
 import OwnershipABI from '../abis/Ownership.json'
 
 type PendingTransfer = {
@@ -27,6 +28,7 @@ export default function PendingTransfers() {
   useEffect(() => { fetchTransfers() }, [])
 
   const handleConfirm = async (transfer: PendingTransfer) => {
+    let toastId: string | number | undefined
     try {
       setLoading(transfer.id)
       if (!window.ethereum) throw new Error('MetaMask not found')
@@ -40,12 +42,10 @@ export default function PendingTransfers() {
         signer
       )
 
-      toast.loading('Confirm in MetaMask...')
+      toastId = toast.loading('Confirm in MetaMask...')
       const tx = await contract.confirmTransfer(transfer.landId)
-      toast.dismiss()
-      toast.loading('Waiting for blockchain confirmation...')
+      toast.loading('Waiting for blockchain confirmation...', { id: toastId })
       await tx.wait()
-      toast.dismiss()
 
       await api.post('/transfers/confirm', {
         landId: transfer.landId,
@@ -54,10 +54,10 @@ export default function PendingTransfers() {
         headers: { Authorization: `Bearer ${jwtToken}` }
       })
 
-      toast.success('Ownership transferred on-chain!')
+      toast.success('Ownership transferred on-chain!', { id: toastId })
       fetchTransfers()
     } catch (err: any) {
-      toast.dismiss()
+      if (toastId !== undefined) toast.dismiss(toastId)
       toast.error(err.reason || err.message || 'Confirmation failed')
     } finally {
       setLoading(null)
@@ -68,7 +68,10 @@ export default function PendingTransfers() {
 
   return (
     <div className="bg-white border border-orange-200 rounded-2xl p-6 mb-6">
-      <h3 className="font-semibold text-gray-900 mb-1">Pending Transfers</h3>
+      <div className="flex items-center gap-2 mb-1">
+        <Inbox className="w-4 h-4 text-orange-500" />
+        <h3 className="font-semibold text-gray-900">Pending Transfers</h3>
+      </div>
       <p className="text-xs text-gray-400 mb-4">Someone is transferring land to you — confirm to receive ownership</p>
       <div className="space-y-3">
         {transfers.map(t => (
@@ -81,8 +84,9 @@ export default function PendingTransfers() {
             <button
               onClick={() => handleConfirm(t)}
               disabled={loading === t.id}
-              className="bg-orange-500 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-orange-600 disabled:opacity-50"
+              className="bg-orange-500 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-orange-600 disabled:opacity-50 flex items-center gap-2"
             >
+              {loading === t.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRightLeft className="w-4 h-4" />}
               {loading === t.id ? 'Confirming...' : 'Confirm Transfer'}
             </button>
           </div>

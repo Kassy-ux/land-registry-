@@ -2,13 +2,22 @@ import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 interface Props {
-  requires: 'wallet' | 'jwt'
+  role: 'landowner' | 'officer' | 'admin'
   children: React.ReactNode
 }
 
-export default function ProtectedRoute({ requires, children }: Props) {
-  const { walletAddress, jwtToken, needsName } = useAuth()
-  if (requires === 'wallet' && !walletAddress && !needsName) return <Navigate to="/" />
-  if (requires === 'jwt' && !jwtToken) return <Navigate to="/" />
+export default function ProtectedRoute({ role, children }: Props) {
+  const { walletAddress, jwtToken, user, needsName } = useAuth()
+
+  if (role === 'landowner') {
+    if (needsName) return <>{children}</>
+    if (walletAddress) return <>{children}</>
+    if (jwtToken && user?.role === 'landowner') return <>{children}</>
+    return <Navigate to="/login" replace />
+  }
+
+  if (!jwtToken || user?.role !== role) {
+    return <Navigate to="/login" replace />
+  }
   return <>{children}</>
 }

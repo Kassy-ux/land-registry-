@@ -1,102 +1,210 @@
 import { useNavigate } from 'react-router-dom'
+import {
+  Shield,
+  ShieldCheck,
+  Database,
+  Eye,
+  Zap,
+  ArrowRight,
+  Landmark,
+  Search,
+  FileText,
+  Users,
+  ChevronRight,
+} from 'lucide-react'
 
 export default function HomePage() {
   const navigate = useNavigate()
 
   return (
     <div className="min-h-screen bg-white font-sans">
-
       {/* Navbar */}
-      <nav className="flex justify-between items-center px-8 py-4 border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          <div className="bg-blue-600 rounded-lg p-1.5">
-            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-            </svg>
+      <nav className="sticky top-0 z-30 backdrop-blur bg-white/80 border-b border-gray-100">
+        <div className="max-w-6xl mx-auto flex justify-between items-center px-4 sm:px-6 py-3">
+          <div className="flex items-center gap-2">
+            <div className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl p-2">
+              <Landmark className="w-5 h-5 text-white" />
+            </div>
+            <span className="font-bold text-gray-900 text-base">Land Registry</span>
           </div>
-          <span className="font-bold text-gray-900">Land Registry</span>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={() => navigate('/verify')} className="text-sm text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-100 font-medium">Verify Land</button>
-          <button onClick={() => navigate('/login')} className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">Sign In</button>
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={() => navigate('/verify')}
+              className="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-100 font-medium"
+            >
+              <Search className="w-4 h-4" />
+              Verify Land
+            </button>
+            <button
+              onClick={() => navigate('/login')}
+              className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 font-medium"
+            >
+              Sign In
+            </button>
+          </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <div className="flex flex-col items-center text-center px-6 py-16">
-        <div className="bg-blue-600 rounded-2xl p-4 mb-6 shadow-lg shadow-blue-100">
-          <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-          </svg>
-        </div>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 max-w-2xl leading-tight">Blockchain Land Registry</h1>
-        <p className="text-base text-gray-500 max-w-xl mb-8 leading-relaxed">
-          Secure, transparent, and trustworthy land registration powered by blockchain. Eliminating fraud, ensuring data integrity, and automating ownership transfers for Kenya.
-        </p>
-        <button onClick={() => navigate('/login')} className="bg-blue-600 text-white px-8 py-3 rounded-xl text-sm font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-100">
-          Get Started →
-        </button>
-      </div>
-
-      {/* Why */}
-      <div className="bg-gray-50 px-6 py-14">
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">Why Blockchain Land Registry?</h2>
-        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {[
-            { bg: 'bg-blue-50', iconBg: 'bg-blue-100', color: 'text-blue-600', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', title: 'Fraud Prevention', desc: 'Eliminate double titling and unauthorized changes with immutable blockchain records.' },
-            { bg: 'bg-green-50', iconBg: 'bg-green-100', color: 'text-green-600', icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z', title: 'Data Integrity', desc: 'Tamper-proof records ensure your land information is always accurate and secure.' },
-            { bg: 'bg-purple-50', iconBg: 'bg-purple-100', color: 'text-purple-600', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4', title: 'Transparency', desc: 'Complete visibility of land records and transaction history builds public trust.' },
-            { bg: 'bg-orange-50', iconBg: 'bg-orange-100', color: 'text-orange-600', icon: 'M13 10V3L4 14h7v7l9-11h-7z', title: 'Smart Automation', desc: 'Automated ownership transfers reduce bureaucracy and minimize human error.' },
-          ].map(f => (
-            <div key={f.title} className={`${f.bg} rounded-2xl p-6`}>
-              <div className={`${f.iconBg} w-11 h-11 rounded-xl flex items-center justify-center mb-4`}>
-                <svg className={`w-6 h-6 ${f.color}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d={f.icon} />
-                </svg>
-              </div>
-              <h3 className="font-bold text-gray-900 mb-1">{f.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-12 grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 text-xs font-medium px-3 py-1.5 rounded-full mb-5">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            Powered by Ethereum
+          </div>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-5 leading-tight">
+            Blockchain Land
+            <br />
+            Registry for{' '}
+            <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              everyone
+            </span>
+          </h1>
+          <p className="text-base text-gray-500 mb-8 leading-relaxed max-w-md">
+            Secure, transparent and tamper-proof land titles. Eliminate fraud, ensure data integrity and
+            automate ownership transfers — all on a public blockchain.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={() => navigate('/login')}
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-indigo-200 transition flex items-center justify-center gap-2"
+            >
+              Get Started
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => navigate('/verify')}
+              className="border border-gray-200 text-gray-700 px-6 py-3 rounded-xl text-sm font-semibold hover:bg-gray-50 transition flex items-center justify-center gap-2"
+            >
+              <Search className="w-4 h-4" />
+              Verify a Title
+            </button>
+          </div>
+          <div className="mt-8 flex items-center gap-6 text-xs text-gray-400">
+            <div>
+              <p className="text-2xl font-bold text-gray-900">99.9%</p>
+              <p>Uptime</p>
             </div>
-          ))}
+            <div>
+              <p className="text-2xl font-bold text-gray-900">5k+</p>
+              <p>Titles</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900">100%</p>
+              <p>Auditable</p>
+            </div>
+          </div>
         </div>
-      </div>
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-100 via-purple-100 to-transparent rounded-3xl blur-2xl opacity-60" />
+          <img
+            src="/illustrations/blockchain.svg"
+            alt="Blockchain land registry"
+            className="relative w-full max-w-lg mx-auto"
+          />
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="bg-gray-50 px-4 sm:px-6 py-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Why blockchain?</h2>
+            <p className="text-gray-500 max-w-xl mx-auto">
+              We rebuild trust in land administration with the properties of distributed ledgers.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { icon: Shield, title: 'Fraud Prevention', desc: 'Immutable records eliminate double-titling and unauthorized changes.', accent: 'bg-indigo-100 text-indigo-600' },
+              { icon: Database, title: 'Data Integrity', desc: 'Tamper-proof records ensure your land information is always accurate.', accent: 'bg-green-100 text-green-600' },
+              { icon: Eye, title: 'Transparency', desc: 'Complete visibility of land records and transaction history.', accent: 'bg-purple-100 text-purple-600' },
+              { icon: Zap, title: 'Smart Automation', desc: 'Automated transfers via smart contracts reduce bureaucracy.', accent: 'bg-orange-100 text-orange-600' },
+            ].map((f) => (
+              <div
+                key={f.title}
+                className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition"
+              >
+                <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${f.accent}`}>
+                  <f.icon className="w-6 h-6" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-1.5">{f.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* How it works */}
-      <div className="px-6 py-14 bg-white">
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-10">How It Works</h2>
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { num: 1, title: 'Register Your Land', desc: 'Land owners submit registration applications with title deed details and documentation.' },
-            { num: 2, title: 'Officer Verification', desc: 'Registry officers review and verify the authenticity of land records before approval.' },
-            { num: 3, title: 'Blockchain Recorded', desc: 'Approved records are permanently stored on the blockchain, creating an immutable audit trail.' },
-          ].map(s => (
-            <div key={s.num} className="flex flex-col items-center text-center">
-              <div className="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mb-4 shadow-md shadow-blue-100">{s.num}</div>
-              <h3 className="font-bold text-gray-900 mb-2">{s.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
+      <section className="px-4 sm:px-6 py-16 bg-white">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div className="order-2 md:order-1">
+            <img
+              src="/illustrations/handshake.svg"
+              alt="Trust and collaboration"
+              className="w-full max-w-md mx-auto"
+            />
+          </div>
+          <div className="order-1 md:order-2">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">How it works</h2>
+            <div className="space-y-6">
+              {[
+                { num: 1, icon: FileText, title: 'Register your land', desc: 'Submit registration with title deed details and supporting documents.' },
+                { num: 2, icon: Users, title: 'Officer verification', desc: 'Registry officers review and approve the authenticity of land records.' },
+                { num: 3, icon: ShieldCheck, title: 'Recorded on-chain', desc: 'Approved records are permanently stored on Ethereum, creating an immutable audit trail.' },
+              ].map((s) => (
+                <div key={s.num} className="flex gap-4">
+                  <div className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <s.icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-indigo-600 uppercase tracking-wider mb-1">
+                      Step {s.num}
+                    </p>
+                    <h3 className="font-semibold text-gray-900 mb-1">{s.title}</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* CTA */}
-      <div className="mx-6 mb-10 rounded-3xl px-8 py-14 text-center" style={{background: 'linear-gradient(135deg, #1d4ed8 0%, #4f46e5 100%)'}}>
-        <h2 className="text-2xl font-bold text-white mb-3">Ready to Secure Your Land Records?</h2>
-        <p className="text-blue-100 mb-8 text-sm">Join the future of land administration with our blockchain-enabled registry system.</p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <button onClick={() => navigate('/login')} className="bg-white text-blue-700 px-7 py-3 rounded-xl text-sm font-semibold hover:bg-blue-50 transition shadow">
-            Access the Platform →
-          </button>
-          <button onClick={() => navigate('/verify')} className="border-2 border-white text-white px-7 py-3 rounded-xl text-sm font-semibold hover:bg-white hover:text-blue-700 transition">
-            Verify Land Ownership →
-          </button>
+      <section className="px-4 sm:px-6 pb-16">
+        <div className="max-w-6xl mx-auto rounded-3xl px-8 py-14 text-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,white,transparent_60%)]" />
+          <div className="relative">
+            <h2 className="text-3xl font-bold text-white mb-3">Ready to secure your land records?</h2>
+            <p className="text-indigo-100 mb-8 text-sm max-w-md mx-auto">
+              Join the future of land administration with our blockchain-enabled registry system.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => navigate('/login')}
+                className="bg-white text-indigo-700 px-7 py-3 rounded-xl text-sm font-semibold hover:bg-indigo-50 transition shadow-lg flex items-center justify-center gap-2"
+              >
+                Access the platform
+                <ChevronRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => navigate('/verify')}
+                className="border border-white/40 text-white px-7 py-3 rounded-xl text-sm font-semibold hover:bg-white/10 transition flex items-center justify-center gap-2"
+              >
+                <Search className="w-4 h-4" />
+                Verify ownership
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Footer */}
-      <div className="text-center py-6 text-gray-400 text-xs border-t border-gray-100">
-        © 2026 Blockchain Land Registry. Enhancing transparency, security, and trust in land administration.
-      </div>
+      <footer className="text-center py-8 text-gray-400 text-xs border-t border-gray-100 px-4">
+        © {new Date().getFullYear()} Blockchain Land Registry. Enhancing transparency, security and trust.
+      </footer>
     </div>
   )
 }
