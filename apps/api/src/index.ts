@@ -2,12 +2,14 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
+import path from 'path'
+import fs from 'fs'
 
 dotenv.config()
 
 const app = express()
 
-app.use(helmet())
+app.use(helmet({ contentSecurityPolicy: false }))
 app.use(cors({ origin: process.env.FRONTEND_URL || '*' }))
 app.use(express.json())
 
@@ -27,5 +29,13 @@ app.use('/api/admin', adminRoutes)
 
 app.get('/health', (_, res) => res.json({ status: 'ok' }))
 
-const PORT = process.env.PORT || 3001
+const webDist = path.resolve(__dirname, '../../web/dist')
+if (fs.existsSync(webDist)) {
+  app.use(express.static(webDist))
+  app.get(/^\/(?!api\/|health$).*/, (_req, res) => {
+    res.sendFile(path.join(webDist, 'index.html'))
+  })
+}
+
+const PORT = Number(process.env.PORT) || 3001
 app.listen(PORT, () => console.log(`API running on port ${PORT}`))
