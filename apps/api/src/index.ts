@@ -9,8 +9,27 @@ dotenv.config()
 
 const app = express()
 
+// Configure CORS to allow multiple origins
+const allowedOrigins = [
+  'http://localhost:5000',
+  'http://localhost:5001',
+  'http://localhost:3000',
+  'https://lands-registry.vercel.app'
+]
+
 app.use(helmet({ contentSecurityPolicy: false }))
-app.use(cors({ origin: process.env.FRONTEND_URL || '*' }))
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or Postman)
+    if (!origin) return callback(null, true)
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true
+}))
 app.use(express.json())
 
 import authRoutes from './routes/auth'
