@@ -4,7 +4,11 @@ import { landRegistryContract } from '../services/blockchainService'
 
 export async function getParcels(req: Request, res: Response) {
   try {
+    const userId = (req as any).userId
     const parcels = await prisma.landParcel.findMany({
+      where: {
+        ownerships: { some: { userId } }
+      },
       include: { ownerships: { include: { user: true } } }
     })
     res.json(parcels)
@@ -17,7 +21,11 @@ export async function getParcel(req: Request, res: Response) {
   try {
     const parcel = await prisma.landParcel.findUnique({
       where: { id: Number(req.params.id) },
-      include: { ownerships: { include: { user: true } }, documents: true, blockchainRecords: true }
+      include: {
+        ownerships: { include: { user: true } },
+        documents: true,
+        blockchainRecords: true
+      }
     })
     if (!parcel) { res.status(404).json({ error: 'Not found' }); return }
     res.json(parcel)
@@ -29,11 +37,12 @@ export async function getParcel(req: Request, res: Response) {
 export async function submitParcel(req: Request, res: Response) {
   try {
     const { titleNumber, location, size, ipfsHash, ownerAddress } = req.body
+    const userId = (req as any).userId
     const parcel = await prisma.landParcel.create({
       data: { titleNumber, location, size: Number(size), status: 'pending' }
     })
     await prisma.ownership.create({
-      data: { userId: (req as any).userId, landId: parcel.id }
+      data: { userId, landId: parcel.id }
     })
     try {
       const tx = await landRegistryContract.submitParcel(titleNumber, location, ipfsHash || '')
@@ -58,10 +67,7 @@ export async function approveParcel(req: Request, res: Response) {
     if (parcel.status !== 'pending') {
       res.status(400).json({ error: 'Parcel is not pending' }); return
     }
-    await prisma.landParcel.update({
-      where: { id: parcelId },
-      data: { status: 'approved' }
-    })
+    await prisma.landParcel.update({ where: { id: parcelId }, data: { status: 'approved' } })
     try {
       const tx = await landRegistryContract.approveParcel(parcelId)
       await tx.wait()
@@ -82,10 +88,7 @@ export async function rejectParcel(req: Request, res: Response) {
     if (parcel.status !== 'pending') {
       res.status(400).json({ error: 'Parcel is not pending' }); return
     }
-    await prisma.landParcel.update({
-      where: { id: parcelId },
-      data: { status: 'rejected' }
-    })
+    await prisma.landParcel.update({ where: { id: parcelId }, data: { status: 'rejected' } })
     try {
       const tx = await landRegistryContract.rejectParcel(parcelId)
       await tx.wait()
@@ -95,5 +98,16 @@ export async function rejectParcel(req: Request, res: Response) {
     res.json({ success: true, message: 'Parcel rejected' })
   } catch (err: any) {
     res.status(500).json({ error: err.message })
+  }
+}
+
+export async function getAllParcels(req: Request, res: Response) {
+  try {
+    const parcels = await prisma.landParcel.findMany({
+      include: { ownerships: { include: { user: true } } }
+    })
+    res.json(parcels)
+  } catch {
+    res.status(500).json({ error: 'Server error' })
   }
 }

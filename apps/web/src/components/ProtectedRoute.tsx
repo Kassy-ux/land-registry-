@@ -7,8 +7,8 @@ interface Props {
 }
 
 export default function ProtectedRoute({ requires, children }: Props) {
-  const { walletAddress, jwtToken } = useAuth()
-  if (requires === 'wallet' && !walletAddress) return <Navigate to="/" />
+  const { walletAddress, jwtToken, needsName } = useAuth()
+  if (requires === 'wallet' && !walletAddress && !needsName) return <Navigate to="/" />
   if (requires === 'jwt' && !jwtToken) return <Navigate to="/" />
   return <>{children}</>
 }

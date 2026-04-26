@@ -5,7 +5,7 @@ import api from '../services/api'
 import toast, { Toaster } from 'react-hot-toast'
 
 export default function LoginPage() {
-  const { connectWallet, login } = useAuth()
+  const { connectWallet, login, needsName } = useAuth()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -15,8 +15,7 @@ export default function LoginPage() {
     try {
       setLoading(true)
       await connectWallet()
-      toast.success('Wallet connected')
-      navigate('/landowner')
+      if (!needsName) navigate('/landowner')
     } catch (err: any) {
       toast.error(err.message || 'Failed to connect wallet')
     } finally {
@@ -29,7 +28,8 @@ export default function LoginPage() {
     try {
       setLoading(true)
       const res = await api.post('/auth/login', { email, password })
-      login(res.data.token)
+      login(res.data.token, res.data.user)
+      if (res.data.user.role === 'admin') { navigate('/admin'); return }
       toast.success('Logged in as officer')
       navigate('/officer')
     } catch {
@@ -44,6 +44,9 @@ export default function LoginPage() {
       <Toaster />
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 w-full max-w-md p-8">
         <div className="text-center mb-8">
+          <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+            <span className="text-white font-bold text-lg">BL</span>
+          </div>
           <h1 className="text-2xl font-semibold text-gray-900">Land Registry</h1>
           <p className="text-gray-500 text-sm mt-1">Blockchain-powered land administration</p>
         </div>
@@ -51,9 +54,9 @@ export default function LoginPage() {
           <button
             onClick={handleWallet}
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition disabled:opacity-50"
+            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            Connect MetaMask — Landowner
+            <span>🦊</span> Connect MetaMask — Landowner
           </button>
         </div>
         <div className="flex items-center gap-3 mb-6">
@@ -93,7 +96,7 @@ export default function LoginPage() {
           </button>
         </form>
         <p className="text-center text-sm text-gray-400 mt-6">
-          <a href="/" className="hover:text-indigo-600 mr-4">← Home</a><a href="/verify" className="hover:text-indigo-600">Public verification →</a>
+          <a href="/verify" className="hover:text-indigo-600">Public verification →</a>
         </p>
       </div>
     </div>

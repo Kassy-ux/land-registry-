@@ -16,12 +16,14 @@ import parcelRoutes from './routes/parcels'
 import transferRoutes from './routes/transfers'
 import documentRoutes from './routes/documents'
 import verifyRoutes from './routes/verify'
+import adminRoutes from './routes/admin'
 
 app.use('/api/auth', authRoutes)
 app.use('/api/parcels', parcelRoutes)
 app.use('/api/transfers', transferRoutes)
 app.use('/api/documents', documentRoutes)
 app.use('/api/verify', verifyRoutes)
+app.use('/api/admin', adminRoutes)
 
 app.get('/health', (_, res) => res.json({ status: 'ok' }))
 
